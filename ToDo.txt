@@ -1,0 +1,7 @@
+To do list for ME 459 project
+-------------------------------
+- create filter for wave speed measurements
+- create x correlation for two signals
+- organize inputs to code
+	- separate push and pull taps
+- generate NaNfill and low pass filter of processed wave speed signal

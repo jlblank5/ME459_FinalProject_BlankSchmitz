@@ -3,12 +3,13 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include "readLVM.h"
+#include "fileIO.h"
 #include "filter.h"
 
 int main(int argc,char *argv[]){
     //char *filename = "check1.lvm";
-    char *filename = argv[1];
+    char *fileIn = argv[1];
+    char *fileOut = "processed.csv";
     double **dataMatrix;
     //double *dataMatrix;
     int numFields = 0; // number of fields (i.e. data columns) in the .lvm file
@@ -18,36 +19,13 @@ int main(int argc,char *argv[]){
 
     int i, j; // index variables
 
-    dataMatrix = readLVM(filename,&numFields,&numSamples); // call readLVM to load data into a matrix
-
-    // print the data with each field in its own column
-    /*
-    for( j = 0 ; j < numSamples ; j++ ){
-        for( i = 0 ; i < numFields ; i++ ){
-            printf("%.4f\t",dataMatrix[i][j]);
-            printf("%.12f,",dataMatrix[i][j]);
-            //printf("%.12f,",dataMatrix[(j*numFields) + i]);
-        }// end for fields
-        printf("\b\n");
-    }// end for samples
-    */
-
-    // Test the low-pass filter coefficient calculator
-    /*
-    double B[3];
-    double A[3];
-    butterLP(1500,50000,B,A);
-    printf("Low-pass numerator coefficients: %.6f %.6f %.6f\n",A[0],A[1],A[2]);
-    printf("Low-pass denominator coefficients: %.6f %.6f %.6f\n",B[0],B[1],B[2]);
-    */
+    dataMatrix = readLVM(fileIn,&numFields,&numSamples); // call readLVM to load data into a matrix
    
     // filter first accelerometer data
     double *filteredAcc1;
     filteredAcc1 = filtfilt(dataMatrix[1], numSamples, sampleFreq, 150, 1500);
 
-    for( i = 0 ; i < numSamples ; i++ ){
-        printf("%f\n",filteredAcc1[i]);
-    }//end for
+    writeCSV(fileOut,filteredAcc1,numSamples,1); // write filtered data out to file for plotting in Matlab
 
     free(dataMatrix);
     free(filteredAcc1);

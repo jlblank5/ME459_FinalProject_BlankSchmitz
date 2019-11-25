@@ -1,0 +1,4 @@
+# some useful functions that we should keep track of to not be redundant
+
+- max of an array
+- diff matlab function [X(2)-X(1) X(3)-X(2) ...]

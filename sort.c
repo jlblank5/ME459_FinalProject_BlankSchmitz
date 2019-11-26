@@ -19,17 +19,20 @@ int max(double arr[], size_t size){
 }
 
 // finds the difference in successive array elements
-double diff(double arr[], size_t size){
+double* diff(double arr[], size_t size){
     double d;
+    // dynamically allocate an array to store values
+    double* diff = malloc((*double)(size-1)*sizeof(double));
     // find the difference at each point in the array
-    for (int i=0; i<size; i++){
-        
+    for (int i=0; i<size-1; i++){
+        diff[i] = arr[i+1]-arr[i];
     }
+    return diff;
 }
 
 // computed the cross-correlation given two signals, a window, the sampling time and returns
 // the correlation coefficient and time delay
-double * sort(double *signalRef, double ts, double *timeDelay){
+double * sort(double *signalRef, double ts, double tapRate, double *timeDelay){
 
     // get rid of aberrant negative values
     for (int i=1; i<len(signalRef)-1; i++){
@@ -38,15 +41,28 @@ double * sort(double *signalRef, double ts, double *timeDelay){
         }
     }
 
+    // calculate the data points per tap
+    double m = ts/tapRate;
     // create an array of booleans the size of signalRef
     boolean* extended = malloc((*boolean)len(signalRef)*sizeof(boolean));
     boolean* retracted = malloc((*boolean)len(signalRef)*sizeof(boolean));
+    int* leading = malloc((*int)m*sizeof(int));
+    int* trailing = malloc((*int)m*sizeof(int));
     // find pulse edges of the tap signal
     int n = len(signalRef);
+    int j = 0; int k = 0;
     for (int i=0; i<n; i++){
+        // store the extended and retracted tapper data
         extended[i]=signalRef[i]>signalRef(max(signalRef,n))/2;
         retracted[i]=signalRef[i]<signalRef(max(signalRef,n))/2;
+        if (i<n-1){
+            // store the leading and trailing indices
+            if (extended[i+1]-extended[i]){leading[j] = i; j++;}
+            if (retracted[i+1]-retracted[i]){trailing[k] = i; k++;}
+        }
     }
+
+    // implement a sorting algorithm to obtian the data during the push and pull events
 
     return corrCoeff;
 }

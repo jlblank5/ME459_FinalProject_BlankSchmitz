@@ -50,19 +50,43 @@ double * sort(double *signalRef, double ts, double tapRate, double *timeDelay){
     int* trailing = malloc((*int)m*sizeof(int));
     // find pulse edges of the tap signal
     int n = len(signalRef);
-    int j = 0; int k = 0;
+    int j = 0; int k = 0; int flag;
     for (int i=0; i<n; i++){
         // store the extended and retracted tapper data
         extended[i]=signalRef[i]>signalRef(max(signalRef,n))/2;
         retracted[i]=signalRef[i]<signalRef(max(signalRef,n))/2;
         if (i<n-1){
             // store the leading and trailing indices
-            if (extended[i+1]-extended[i]){leading[j] = i; j++;}
-            if (retracted[i+1]-retracted[i]){trailing[k] = i; k++;}
+            if (abs(extended[i+1]-extended[i])>0){flag=1;}
+            if (flag){leading[j]=i; j++;}    
+            if (abs(retracted[i+1]-retracted[i])>0){flag=0;}
+            if (!flag){trailing[k]=i; k++;}
         }
     }
+    free(extended);
+    free(retracted);
 
     // implement a sorting algorithm to obtian the data during the push and pull events
+    int nPush = len(leading)
+    // dynamically allocate memory for the push data
+    double* push = malloc((*double)n*sizeof(double));
+    for (int i=0; i<n; i++){
+        push[i] = signalRef[leading[i]];
+    }
+    int nPull = len(trailing)
+    // dynamically allocate memory for the pull data
+    double* pull = malloc((*double)n*sizeof(double));
+    for (int i=0; i<n; i++){
+        pull[i] = signalRef[trailing[i]];
+    }
 
-    return corrCoeff;
+    // create the sorted array to hold all of the push and pull data
+    if (nPush==nPull){
+        double sortedArray[nPush][2];
+    } else {
+        double* sortedArray = malloc((*double)(nPush+nPull)*sizeof(double));
+    }
+    
+
+    return sortedArray;
 }

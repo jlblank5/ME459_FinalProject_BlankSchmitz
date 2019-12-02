@@ -42,12 +42,12 @@ double * sort(double *signalRef, double ts, double tapRate, double *timeDelay){
     }
 
     // calculate the data points per tap
-    double m = ts/tapRate;
+    int m = ts/tapRate;
     // create an array of booleans the size of signalRef
-    boolean* extended = malloc((*boolean)len(signalRef)*sizeof(boolean));
-    boolean* retracted = malloc((*boolean)len(signalRef)*sizeof(boolean));
-    int* leading = malloc((*int)m*sizeof(int));
-    int* trailing = malloc((*int)m*sizeof(int));
+    bool* extended = (bool*)malloc((int)(sizeof(signalRef)/sizeof(signalRef[0]))*sizeof(bool));
+    bool* retracted = (bool*)malloc((int)(sizeof(signalRef)/sizeof(signalRef[0]))*sizeof(bool));
+    int* leading = (int*)malloc(m*sizeof(int));
+    int* trailing = (int*)malloc(m*sizeof(int));
     // find pulse edges of the tap signal
     int n = len(signalRef);
     int j = 0; int k = 0; int flag;
@@ -58,9 +58,9 @@ double * sort(double *signalRef, double ts, double tapRate, double *timeDelay){
         if (i<n-1){
             // store the leading and trailing indices
             if (abs(extended[i+1]-extended[i])>0){flag=1;}
-            if (flag){leading[j]=i; j++;}    
-            if (abs(retracted[i+1]-retracted[i])>0){flag=0;}
-            if (!flag){trailing[k]=i; k++;}
+            if (flag){leading[j]=i; flag=0; j++;}    
+            if (abs(retracted[i+1]-retracted[i])>0){flag=1;}
+            if (!flag){trailing[k]=i; flag=0; k++;}
         }
     }
     free(extended);

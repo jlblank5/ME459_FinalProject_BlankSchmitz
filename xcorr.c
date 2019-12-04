@@ -33,8 +33,11 @@ double *normxcorr(double *templ, size_t lenT, double *ref, size_t lenR){
 
 double computeTimeDelay(double *sig1, double *sig2, size_t indA, size_t indZ, double *window, int sampleRate){
     double *templ, *ref, *r;
-    double timeDelay;
+    double rMax = 0;
+    int maxInd = 0;
+    double wo, theta, delta, frameDelay, timeDelay;
     int windowShift;
+    int i;
     size_t templLength, refLength;
 
     // determine the beginning index of the template according to the first element of window (which is in milliseconds)
@@ -56,15 +59,26 @@ double computeTimeDelay(double *sig1, double *sig2, size_t indA, size_t indZ, do
     r = normxcorr(templ,templLength,ref,refLength);
 
     // find the maximum correlation value
+    for( i = 0 ; i < (refLength - templLength) ; i++ ){
+        if(r[i] < rMax){ rMax = r[i]; maxInd = i; }
+    }// end for i
 
-    // peform cosine interpolation for subsample frame shift
+    //Performing cosine interpolation to estimate lags with sub-frame
+    //precision. See Cespedes et al., Ultrason Imaging 17, 142-171 (1995).
+    if(maxInd > 0 && maxInd < (refLength - templLength)){
+        wo = acos((r[maxInd-1] + r[maxInd+1])/(2*r[maxInd]));
+        theta = atan((r[maxInd-1] - r[maxInd+1])/(2*r[maxInd]*sin(wo)));
+        delta = - theta/wo;
+        frameDelay = maxInd - 1 + delta;
+    } else{
+        frameDelay = maxInd - 1;
+    }// end if/else
 
     // compute time lag based on frame lag
-
+    timeDelay = (frameDelay/sampleRate)*1000; // time delay in milliseconds
 
     free(r);
 
     return timeDelay;
-    
 
 }// end computeTimeDelay

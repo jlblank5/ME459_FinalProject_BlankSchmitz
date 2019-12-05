@@ -23,7 +23,9 @@ int max(double arr[], size_t size){
 int *sort(const double* signalRef, size_t ts, size_t tapRate){
 
     // initialize the new tap signal
-    int n = sizeof(signalRef)/sizeof(signalRef[0]);
+    int size = sizeof(*signalRef);
+    int sizeInd = sizeof(signalRef[0]);
+    int n = sizeof(*signalRef)/sizeof(signalRef[0]);
     double* signal = (double*)malloc(n*sizeof(double));
 
     // get rid of aberrant negative values
@@ -34,18 +36,20 @@ int *sort(const double* signalRef, size_t ts, size_t tapRate){
     }
 
     // calculate the data points per tap
-    int m = ts/tapRate;
+    double m = ts/tapRate;
+    // calculate the total number of push and pull taps
+    double nTaps = n*(1/m);
     // create an array of booleans the size of signalRef
-    bool* extended = (bool*)malloc((int)(sizeof(signal)/sizeof(signal[0]))*sizeof(bool));
-    bool* retracted = (bool*)malloc((int)(sizeof(signal)/sizeof(signal[0]))*sizeof(bool));
-    int* leading = (int*)malloc(m*sizeof(int));
-    int* trailing = (int*)malloc(m*sizeof(int));
+    bool* extended = (bool*)malloc(n*sizeof(bool));
+    bool* retracted = (bool*)malloc(n*sizeof(bool));
+    int* leading = (int*)malloc((int)nTaps*sizeof(int));
+    int* trailing = (int*)malloc((int)nTaps*sizeof(int));
     // find pulse edges of the tap signal
     int j = 0; int k = 0; int flag;
     for (int i=0; i<n; i++){
         // store the extended and retracted tapper data
-        extended[i]=signal[i]>(max(signal,n))/2;
-        retracted[i]=signal[i]<(max(signal,n))/2;
+        extended[i]=signal[i]>(max(signal,n)/2);
+        retracted[i]=signal[i]<(max(signal,n)/2);
         if (i<n-1){
             // store the leading and trailing indices
             if (abs(extended[i+1]-extended[i])>0){flag=1;}
@@ -73,7 +77,7 @@ int *sort(const double* signalRef, size_t ts, size_t tapRate){
                 pushPullIndices[nLeading+i] = trailing[i];
             }
         }
-    } else {
+    } else if (nLeading<nTrailing) {
         for (int i=0; i<nTrailing; i++){
             pushPullIndices[nLeading+i] = trailing[i];
             if (i==nLeading + 1){
@@ -82,7 +86,12 @@ int *sort(const double* signalRef, size_t ts, size_t tapRate){
                 pushPullIndices[i] = leading[i];
             }
         }
-    }  
+    } else {
+        for (int i=0; i<nLeading; i++){
+            pushPullIndices[i] = leading[i];
+            pushPullIndices[nLeading+i] = trailing[i];
+        }
+    }
 
     free(leading);
     free(trailing);

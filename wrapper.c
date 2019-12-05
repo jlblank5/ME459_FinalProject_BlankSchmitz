@@ -10,7 +10,7 @@
 
 int main(int argc,char *argv[]){
     //char *filename = "check1.lvm";
-    char *fileIn = argv[1];
+    char *fileIn = "check2.lvm";
     char *fileOut = "processed.csv";
     char *sortedTapOut = "sortedTap.csv";
     double **dataMatrix;

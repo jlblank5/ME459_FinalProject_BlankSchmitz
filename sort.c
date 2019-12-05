@@ -2,59 +2,50 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+#include <stdbool.h>
 #include "sort.h"
 
 // finds the max of a given array
 int max(double arr[], size_t size){
     // initialize the max
-    int max = 0;
+    int max = 0; 
     // find the maximum value in the array
     for(int i=0; i<size; i++){
         if (arr[i]>arr[max]){
             max = i;
         }
     }
-    return i;
-}
-
-// finds the difference in successive array elements
-double* diff(double arr[], size_t size){
-    double d;
-    // dynamically allocate an array to store values
-    double* diff = malloc((*double)(size-1)*sizeof(double));
-    // find the difference at each point in the array
-    for (int i=0; i<size-1; i++){
-        diff[i] = arr[i+1]-arr[i];
-    }
-    return diff;
+    return max;
 }
 
 // computed the cross-correlation given two signals, a window, the sampling time and returns
 // the correlation coefficient and time delay
-double * sort(double *signalRef, double ts, double tapRate, double *timeDelay){
+int *sort(const double* signalRef, size_t ts, size_t tapRate){
+
+    // initialize the new tap signal
+    int n = sizeof(signalRef)/sizeof(signalRef[0]);
+    double* signal = (double*)malloc(n*sizeof(double));
 
     // get rid of aberrant negative values
-    for (int i=1; i<len(signalRef)-1; i++){
+    for (int i=1; i<n-1; i++){
         if (signalRef[i]<0){
-            signalRef[i]=(signalRef[i-1]+signalRef[i+1])/2;
+            signal[i]=(signalRef[i-1]+signalRef[i+1])/2;
         }
     }
 
     // calculate the data points per tap
     int m = ts/tapRate;
     // create an array of booleans the size of signalRef
-    bool* extended = (bool*)malloc((int)(sizeof(signalRef)/sizeof(signalRef[0]))*sizeof(bool));
-    bool* retracted = (bool*)malloc((int)(sizeof(signalRef)/sizeof(signalRef[0]))*sizeof(bool));
+    bool* extended = (bool*)malloc((int)(sizeof(signal)/sizeof(signal[0]))*sizeof(bool));
+    bool* retracted = (bool*)malloc((int)(sizeof(signal)/sizeof(signal[0]))*sizeof(bool));
     int* leading = (int*)malloc(m*sizeof(int));
     int* trailing = (int*)malloc(m*sizeof(int));
     // find pulse edges of the tap signal
-    int n = len(signalRef);
     int j = 0; int k = 0; int flag;
     for (int i=0; i<n; i++){
         // store the extended and retracted tapper data
-        extended[i]=signalRef[i]>signalRef(max(signalRef,n))/2;
-        retracted[i]=signalRef[i]<signalRef(max(signalRef,n))/2;
+        extended[i]=signal[i]>(max(signal,n))/2;
+        retracted[i]=signal[i]<(max(signal,n))/2;
         if (i<n-1){
             // store the leading and trailing indices
             if (abs(extended[i+1]-extended[i])>0){flag=1;}
@@ -66,27 +57,35 @@ double * sort(double *signalRef, double ts, double tapRate, double *timeDelay){
     free(extended);
     free(retracted);
 
-    // implement a sorting algorithm to obtian the data during the push and pull events
-    int nPush = len(leading)
-    // dynamically allocate memory for the push data
-    double* push = malloc((*double)n*sizeof(double));
-    for (int i=0; i<n; i++){
-        push[i] = signalRef[leading[i]];
+    // dynamically allocate memory to store leading and trailing indices
+    int nLeading = 0; int nTrailing = 0;
+    for (int i=0; i<m; i++){
+        if (&leading[i] != NULL){nLeading++;}
+        if (&trailing[i] != NULL){nTrailing++;}
     }
-    int nPull = len(trailing)
-    // dynamically allocate memory for the pull data
-    double* pull = malloc((*double)n*sizeof(double));
-    for (int i=0; i<n; i++){
-        pull[i] = signalRef[trailing[i]];
-    }
-
-    // create the sorted array to hold all of the push and pull data
-    if (nPush==nPull){
-        double sortedArray[nPush][2];
+    int* pushPullIndices = (int*)malloc((nTrailing+nLeading)*sizeof(int));
+    if (nLeading>nTrailing){
+        for (int i=0; i<nLeading; i++){
+            pushPullIndices[i] = leading[i];
+            if (i==nLeading-1){
+                // skip this indices
+            } else {
+                pushPullIndices[nLeading+i] = trailing[i];
+            }
+        }
     } else {
-        double* sortedArray = malloc((*double)(nPush+nPull)*sizeof(double));
-    }
-    
+        for (int i=0; i<nTrailing; i++){
+            pushPullIndices[nLeading+i] = trailing[i];
+            if (i==nLeading + 1){
+                // skip this indices
+            } else {
+                pushPullIndices[i] = leading[i];
+            }
+        }
+    }  
 
-    return sortedArray;
+    free(leading);
+    free(trailing);
+
+    return pushPullIndices;
 }

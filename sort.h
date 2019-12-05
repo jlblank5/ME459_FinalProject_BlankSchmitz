@@ -1,11 +1,9 @@
 // Author: Jon Blank
 
-#ifndef XCORR
-#define XCORR
+#ifndef SORT
+#define SORT
 
 // reads in two arrays of known lengths and computed the cross correlation
-double * xcorr(double *signalOne, double *signalTwo, double *signalOneTime, double *signalTwoTime, double *timeDelay);
-
-
+int *sort(const double* signalRef, size_t ts, size_t tapRate);
 
 #endif

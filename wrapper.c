@@ -34,7 +34,7 @@ int main(int argc,char *argv[]){
     int *pushPullIndices;
     pushPullIndices = sort(dataMatrix[0], sampleFreq, numSamples, 100);
 
-    writeCSVInt(sortedTapOut,pushPullIndices,numSamples,1); // write filtered data out to file for plotting in Matlab
+    writeCSVInt(sortedTapOut,pushPullIndices,1000,1); // write filtered data out to file for plotting in Matlab
 
     free(dataMatrix);
     free(filteredAcc1);

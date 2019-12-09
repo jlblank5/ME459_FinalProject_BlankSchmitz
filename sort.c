@@ -43,17 +43,18 @@ int *sort(const double* signalRef, size_t ts, size_t n, size_t tapRate){
     int* trailing = (int*)malloc((int)n*sizeof(int));
     // find pulse edges of the tap signal
     int j = 0; int k = 0; int flag = 0;
-    double thresh;
+    double thresh = signalRef[max(signalRef,n)]/2;
     for (int i=0; i<n-1; i++){
         // store the extended and retracted tapper data
-        thresh = signalRef[max(signalRef,n)]/2;
         if (signalRef[i]>thresh){extended[i]=1; retracted[i]=0;}
         if (signalRef[i]<thresh){extended[i]=0; retracted[i]=1;}
+    }
+    for (int i=0; i<n-1; i++){
         if (i<n-1){
             // store the leading and trailing indices
-            if (abs(extended[i+1]-extended[i])>0){flag=1;}
+            if ((extended[i+1]-extended[i])>0){flag=1;}
             if (flag==1){leading[j]=i; j++; flag=0;}    
-            if (abs(retracted[i+1]-retracted[i])>0){flag=1;}
+            if ((retracted[i+1]-retracted[i])>0){flag=1;}
             if (flag==1){trailing[k]=i; k++; flag=0;}
         }
     }

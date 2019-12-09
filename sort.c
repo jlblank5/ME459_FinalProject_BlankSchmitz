@@ -6,7 +6,7 @@
 #include "sort.h"
 
 // finds the max of a given array
-int max(double arr[], size_t size){
+int max(const double* arr, size_t size){
     // initialize the max
     int max = 0; 
     // find the maximum value in the array
@@ -20,12 +20,9 @@ int max(double arr[], size_t size){
 
 // computed the cross-correlation given two signals, a window, the sampling time and returns
 // the correlation coefficient and time delay
-int *sort(const double* signalRef, size_t ts, size_t tapRate){
+int *sort(const double* signalRef, size_t ts, size_t n, size_t tapRate){
 
     // initialize the new tap signal
-    int size = sizeof(*signalRef);
-    int sizeInd = sizeof(signalRef[0]);
-    int n = sizeof(*signalRef)/sizeof(signalRef[0]);
     double* signal = (double*)malloc(n*sizeof(double));
 
     // get rid of aberrant negative values
@@ -40,22 +37,24 @@ int *sort(const double* signalRef, size_t ts, size_t tapRate){
     // calculate the total number of push and pull taps
     double nTaps = n*(1/m);
     // create an array of booleans the size of signalRef
-    bool* extended = (bool*)malloc(n*sizeof(bool));
-    bool* retracted = (bool*)malloc(n*sizeof(bool));
-    int* leading = (int*)malloc((int)nTaps*sizeof(int));
-    int* trailing = (int*)malloc((int)nTaps*sizeof(int));
+    int* extended = (int*)malloc(n*sizeof(int));
+    int* retracted = (int*)malloc(n*sizeof(int));
+    int* leading = (int*)malloc((int)n*sizeof(int));
+    int* trailing = (int*)malloc((int)n*sizeof(int));
     // find pulse edges of the tap signal
-    int j = 0; int k = 0; int flag;
-    for (int i=0; i<n; i++){
+    int j = 0; int k = 0; int flag = 0;
+    double thresh;
+    for (int i=0; i<n-1; i++){
         // store the extended and retracted tapper data
-        extended[i]=signal[i]>(max(signal,n)/2);
-        retracted[i]=signal[i]<(max(signal,n)/2);
+        thresh = signalRef[max(signalRef,n)]/2;
+        if (signalRef[i]>thresh){extended[i]=1; retracted[i]=0;}
+        if (signalRef[i]<thresh){extended[i]=0; retracted[i]=1;}
         if (i<n-1){
             // store the leading and trailing indices
             if (abs(extended[i+1]-extended[i])>0){flag=1;}
-            if (flag){leading[j]=i; flag=0; j++;}    
+            if (flag==1){leading[j]=i; j++; flag=0;}    
             if (abs(retracted[i+1]-retracted[i])>0){flag=1;}
-            if (!flag){trailing[k]=i; flag=0; k++;}
+            if (flag==1){trailing[k]=i; k++; flag=0;}
         }
     }
     free(extended);

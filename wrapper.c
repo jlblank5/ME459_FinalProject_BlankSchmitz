@@ -30,13 +30,15 @@ int main(int argc,char *argv[]){
 
     writeCSV(fileOut,dataMatrix[0],numSamples,1); // write filtered data out to file for plotting in Matlab
 
+    // sort the push and pull tap indices
     int *pushPullIndices;
-    pushPullIndices = sort(dataMatrix[0], sampleFreq, 100);
+    pushPullIndices = sort(dataMatrix[0], sampleFreq, numSamples, 100);
 
-    writeCSV(sortedTapOut,(double*)pushPullIndices,numSamples,1); // write filtered data out to file for plotting in Matlab
+    writeCSVInt(sortedTapOut,pushPullIndices,numSamples,1); // write filtered data out to file for plotting in Matlab
 
     free(dataMatrix);
     free(filteredAcc1);
+    free(pushPullIndices);
 
     return 0;
 }// end main

@@ -44,7 +44,7 @@ double computeTimeDelay(double *sig1, double *sig2, size_t indA, size_t indZ, do
     windowShift = (int) (sampleRate*window[0]/1000);
 
     // define the template length according to the second element of window
-    templLength = (size_t) (sampleRate*(window[1] - window[2]));
+    templLength = (size_t) (sampleRate*(window[1] - window[0])/1000);
     
     // define the template as a segment of sig1 based on indA and the window
     templ = &sig1[indA + windowShift];

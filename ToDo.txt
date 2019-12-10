@@ -5,3 +5,6 @@ To do list for ME 459 project
 - organize inputs to code
 	- separate push and pull taps
 - generate NaNfill and low pass filter of processed wave speed signal
+
+
+gcc wrapper.c filtfilt.c sort.c xcorr.c butterLP.c butterHP.c readLVM.c writeCSV.c writeCSVInt.c -g -o wrapper.exe

@@ -1,9 +1,9 @@
 // Author: Jon Blank
 
-#ifndef XCORR
-#define XCORR
+#ifndef XCORR_H
+#define XCORR_H
 
 // reads in two arrays of known lengths and computed the cross correlation
-double * xcorr(double *signalOne, double *signalTwo, double *signalOneTime, double *signalTwoTime, double *timeDelay);
+double computeTimeDelay(double *sig1, double *sig2, size_t indA, size_t indZ, double *window, int sampleRate);
 
 #endif

@@ -6,7 +6,7 @@
 #include "sort.h"
 
 // finds the max of a given array
-int max(const double* arr, size_t size){
+int max_jon(const double* arr, size_t size){
     // initialize the max
     int max = 0; 
     // find the maximum value in the array
@@ -20,7 +20,7 @@ int max(const double* arr, size_t size){
 
 // computed the cross-correlation given two signals, a window, the sampling time and returns
 // the correlation coefficient and time delay
-int *sort(const double* signalRef, size_t ts, size_t n, size_t tapRate){
+int *sort(const double* signalRef, size_t ts, size_t n, size_t tapRate, int* lead, int* trail){
 
     // initialize the new tap signal
     double* signal = (double*)malloc(n*sizeof(double));
@@ -43,7 +43,7 @@ int *sort(const double* signalRef, size_t ts, size_t n, size_t tapRate){
     int* trailing = (int*)malloc((int)n*sizeof(int));
     // find pulse edges of the tap signal
     int j = 0; int k = 0; int flag = 0;
-    double thresh = signalRef[max(signalRef,n)]/2;
+    double thresh = signalRef[max_jon(signalRef,n)]/2;
     for (int i=0; i<n-1; i++){
         // store the extended and retracted tapper data
         if (signalRef[i]>thresh){extended[i]=1; retracted[i]=0;}
@@ -96,5 +96,7 @@ int *sort(const double* signalRef, size_t ts, size_t n, size_t tapRate){
     free(leading);
     free(trailing);
 
+    *lead = nLeading;
+    *trail = nTrailing;
     return pushPullIndices;
 }

@@ -60,7 +60,7 @@ double computeTimeDelay(double *sig1, double *sig2, size_t indA, size_t indZ, do
 
     // find the maximum correlation value
     for( i = 0 ; i < (refLength - templLength) ; i++ ){
-        if(r[i] < rMax){ rMax = r[i]; maxInd = i; }
+        if(r[i] > rMax){ rMax = r[i]; maxInd = i; }
     }// end for i
 
     //Performing cosine interpolation to estimate lags with sub-frame

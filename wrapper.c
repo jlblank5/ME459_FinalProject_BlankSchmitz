@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
+#include <time.h>
 #include "fileIO.h"
 #include "filter.h"
 #include "sort.h"
@@ -23,11 +24,17 @@ int main(int argc,char *argv[]){
 
     int sampleFreq = 50000; // Hz
 
-    double filter[2] = {150,1500};
+    double filter[2] = {150,5000};
     double window[2] = {0,2};
     double travelDist = 10;
 
     int i, j; // index variables
+
+    // ----- timing -----
+    clock_t start, stop; // timer vars
+    double cpu_time_used; // timer vars
+	start = clock();
+    // ----- timing -----
 
     dataMatrix = readLVM(fileIn,&numFields,&numSamples); // call readLVM to load data into a matrix
    
@@ -109,6 +116,11 @@ int main(int argc,char *argv[]){
         release[i] =  travelDist/computeTimeDelay(filteredAcc1, filteredAcc2, ind1, ind2, window, sampleFreq);
     }// end for each push
 
+    // ----- timing -----
+    stop = clock();
+    cpu_time_used = ((double) (stop - start)) / CLOCKS_PER_SEC;
+    printf("Exec. time: %.2f seconds",cpu_time_used);
+    // ----- timing -----
 
     writeCSV(pushFile,push,nPush,1);
     writeCSV(releaseFile,release,nRelease,1);

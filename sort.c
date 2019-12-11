@@ -63,7 +63,7 @@ int *sort(const double* signalRef, size_t ts, size_t n, size_t tapRate, int* lea
 
     // dynamically allocate memory to store leading and trailing indices
     int nLeading = 0; int nTrailing = 0;
-    for (int i=0; i<m; i++){
+    for (int i=0; i<nTaps/2; i++){
         if (&leading[i] != NULL){nLeading++;}
         if (&trailing[i] != NULL){nTrailing++;}
     }

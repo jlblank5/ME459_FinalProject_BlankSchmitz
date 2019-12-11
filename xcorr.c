@@ -50,10 +50,10 @@ double computeTimeDelay(double *sig1, double *sig2, size_t indA, size_t indZ, do
     templ = &sig1[indA + windowShift];
 
     // define the reference array length by the difference between indZ and indA
-    refLength = indZ - indA;
+    refLength = indZ - (indA + windowShift);
 
     // define the reference as a segment of sig2 starting at indA
-    ref = &sig2[indA];
+    ref = &sig2[indA + windowShift];
 
     // perform the cross-correlation between the template and reference signals
     r = normxcorr(templ,templLength,ref,refLength);

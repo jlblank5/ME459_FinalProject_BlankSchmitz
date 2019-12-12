@@ -1,5 +1,6 @@
-// Function to write data to a comma-separated file
-// Author: Dylan Schmitz
+/*! Authors: Blank, J. and Schmitz, D.
+ * Function to write data to a comma-separated file
+ */
 
 #include <stdlib.h>
 #include <stdio.h>

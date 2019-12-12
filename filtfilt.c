@@ -1,5 +1,6 @@
-// Zero-phase digital filtering function (inspired by Matlab's filtfilt)
-// Author: Dylan Schmitz
+/*! Authors: Blank, J. and Schmitz, D.
+ * This is the zero-phase digital filtering function (inspired by Matlab's filtfilt)
+ */
 
 #include <stdlib.h>
 #include <stdio.h>

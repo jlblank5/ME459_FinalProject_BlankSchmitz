@@ -1,6 +1,8 @@
-// normxcorr: Function to compute the normalized cross correlation between a template and a reference signal
-// computeTimeDelay: computes the delay between two shear wave arrivals in two signals for a given tap instance
-// Author(s): Jon Blank, Dylan Schmitz
+/*! Authors: Blank, J. and Schmitz, D.
+ * This is the function that computes the normalized cross correlation between a template and a reference signal
+ * computeTimeDelay: computes the delay between two shear wave arrivals in two signals for a given tap instance
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

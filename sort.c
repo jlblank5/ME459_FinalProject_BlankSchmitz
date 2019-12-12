@@ -1,4 +1,6 @@
-// Author: Jon Blank
+/*! Authors: Blank, J. and Schmitz, D.
+ * This function sorts the tap signal into separate push and pull events that will be used in the xcorr function
+ */
 
 #include <stdio.h>
 #include <stdlib.h>

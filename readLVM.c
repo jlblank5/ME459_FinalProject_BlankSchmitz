@@ -1,5 +1,6 @@
-// Author: Dylan Schmitz
-// Read values from an .lvm file
+/*! Authors: Blank, J. and Schmitz, D.
+ * This is the function that reads values from an .lvm file
+ */
 
 #include <stdio.h>
 #include <stdlib.h>

@@ -1,14 +1,16 @@
-// Implementation of N-th order Butterworth low-pass filter
-// Adapted from Matlab implementation by Niel Robertson: https://www.dsprelated.com/showarticle/1119.php
-// Author: Dylan Schmitz
-
-// Inputs:  fc  -----   cut-off frequency (Hz)
-//          fs  -----   sampling frequency (Hz)
-
-// Outputs: B   -----   numerator coefficients of the resultant transfer function
-//          A   -----   denominator coefficients of the resultant transfer function
-
-// The function currently supports only a 2nd order filter.
+/*! Authors: Blank, J. and Schmitz, D.
+ * Implementation of N-th order Butterworth low-pass filter
+ * Adapted from Matlab implementation by Niel Robertson: https://www.dsprelated.com/showarticle/1119.php
+ * Author: Dylan Schmitz
+ *
+ * Inputs:  fc  -----   cut-off frequency (Hz)
+ *          fs  -----   sampling frequency (Hz)
+ *
+ * Outputs: B   -----   numerator coefficients of the resultant transfer function
+ *          A   -----   denominator coefficients of the resultant transfer function
+ *
+ * The function currently supports only a 2nd order filter.
+ */
 
 #include <stdlib.h>
 #include <stdio.h>

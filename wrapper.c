@@ -1,14 +1,16 @@
-// Authors: Blank, J. and Schmitz, D.
-// This is the main "wrapper" program that computes wave speed
-
-// Function calls:  readLVM
-//                  filtfilt
-//                  sort
-//                  computeTimeDelay
-//                  writeCSV
-
-// Compile command (gcc):
-// gcc wrapper.c filtfilt.c sort.c xcorr.c butterLP.c butterHP.c readLVM.c writeCSV.c -Wall -O3 -o wrapper.exe
+/*! \mainpage Authors: Blank, J. and Schmitz, D.
+ * \section intro_sec Introduction
+ * This is the main "wrapper" program that computes wave speed
+ *
+ * Function calls:  readLVM
+ *                   filtfilt
+ *                   sort
+ *                   computeTimeDelay
+ *                   writeCSV
+ *
+ *  Compile command (gcc):
+ *  gcc wrapper.c filtfilt.c sort.c xcorr.c butterLP.c butterHP.c readLVM.c writeCSV.c -Wall -O3 -o wrapper.exe
+ */
 
 // ----- LIBRARIES ----- //
 #include <stdlib.h>

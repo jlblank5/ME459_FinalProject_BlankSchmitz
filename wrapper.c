@@ -47,14 +47,15 @@ int main(int argc,char *argv[]){
 	start = clock();
     // ----- timing -----
 
-    dataMatrix = readLVM(fileIn,&numFields,&numSamples); // call readLVM to load data into a matrix
+    // call readLVM to load data into a matrix
+    dataMatrix = readLVM(fileIn,&numFields,&numSamples);
    
     // filter first accelerometer data
     double *filteredAcc1, *filteredAcc2;
     filteredAcc1 = filtfilt(dataMatrix[1], numSamples, sampleFreq, filter[0], filter[1]); // filter acc1 data
     filteredAcc2 = filtfilt(dataMatrix[2], numSamples, sampleFreq, filter[0], filter[1]); // filter acc2 data
 
-    // sort the push and pull tap indices
+    /// sort the push and pull tap indices
     int *pushPullIndices;
     int nLead, nTrail;
     size_t ind1, ind2;

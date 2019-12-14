@@ -67,7 +67,6 @@ int main(int argc,char *argv[]){
     // compute wave speed
     bool whichFirst = 0;
     double *push, *release;
-    double delay = 0.0;
     int nPush, nRelease;
 
     // determine which comes first: push or release. Also determine how many push and release events we can use
